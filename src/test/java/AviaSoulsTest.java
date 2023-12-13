@@ -5,11 +5,46 @@ import java.util.Comparator;
 
 public class AviaSoulsTest {
     Ticket ticket1 = new Ticket("Москва", "Париж", 14870, 1420, 1822); // время полета 4 часа 2 минуты (402)
-    Ticket ticket2 = new Ticket("Москва", "Париж", 26520, 2100, 345); // время полета 6 часов 45 минут (645)
+    Ticket ticket2 = new Ticket("Лиссабон", "Мадрид", 26520, 2100, 345); // время полета 6 часов 45 минут (645)
     Ticket ticket3 = new Ticket("Москва", "Париж", 8350, 1110, 1323); // время полета 2 часа 13 минут (213)
-    Ticket ticket4 = new Ticket("Москва", "Париж", 21980, 840, 1555); // время полета 7 часов 15 минут (715)
-    Ticket ticket5 = new Ticket("Москва", "Париж", 14430, 1610, 2055); // время полета 4 часа 45 минут (445)
+    Ticket ticket4 = new Ticket("Копенгаген", "Стамбул", 21980, 840, 1555); // время полета 7 часов 15 минут (715)
+    Ticket ticket5 = new Ticket("Лондон", "Рим", 14430, 1610, 2055); // время полета 4 часа 45 минут (445)
     Ticket ticket6 = new Ticket("Москва", "Париж", 21980, 1016, 1418); //  время полета 4 часа 2 минуты (402)
+
+    @Test
+    public void shouldSearchOneTicket() { // поиск одного подходящего билета
+        AviaSouls manager = new AviaSouls();
+
+        manager.add(ticket1);
+        manager.add(ticket2);
+        manager.add(ticket3);
+        manager.add(ticket4);
+        manager.add(ticket5);
+        manager.add(ticket6);
+
+        Ticket[] expected = {ticket5};
+        Ticket[] actual = manager.search("Лондон", "Рим");
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSearchZeroTickets() { // по результатам поиска нет ни одного подходящего билета
+        AviaSouls manager = new AviaSouls();
+
+        manager.add(ticket1);
+        manager.add(ticket2);
+        manager.add(ticket3);
+        manager.add(ticket4);
+        manager.add(ticket5);
+        manager.add(ticket6);
+
+        Ticket[] expected = {};
+        Ticket[] actual = manager.search("Лондон", "Варшава");
+
+        Assertions.assertArrayEquals(expected, actual);
+
+    }
 
     @Test
     public void shouldComparePricesIfPrice1AbovePrice2() { // сравнение цен на билеты, если цена одного больше цены другого
@@ -36,7 +71,7 @@ public class AviaSoulsTest {
     }
 
     @Test
-    public void shouldSortTicketsByIncreasePrices() { // сортировка массива билетов по цене
+    public void shouldSortTicketsByIncreasePrices() { // поиск и сортировка по цене нескольких подходящих билетов
         AviaSouls manager = new AviaSouls();
 
         manager.add(ticket1);
@@ -46,7 +81,7 @@ public class AviaSoulsTest {
         manager.add(ticket5);
         manager.add(ticket6);
 
-        Ticket[] expected = {ticket3, ticket5, ticket1, ticket4, ticket6, ticket2};
+        Ticket[] expected = {ticket3, ticket1, ticket6};
         Ticket[] actual = manager.search("Москва", "Париж");
 
         Assertions.assertArrayEquals(expected, actual);
@@ -94,7 +129,7 @@ public class AviaSoulsTest {
         manager.add(ticket5);
         manager.add(ticket6);
 
-        Ticket[] expected = {ticket3, ticket1, ticket6, ticket5, ticket2, ticket4};
+        Ticket[] expected = {ticket3, ticket1, ticket6};
         Ticket[] actual = manager.searchAndSortBy("Москва", "Париж", comparator);
 
         Assertions.assertArrayEquals(expected, actual);
